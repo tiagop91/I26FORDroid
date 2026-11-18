@@ -40,3 +40,62 @@ I26 contains no game data. It is an unofficial fan project and it needs your own
 
 # Credits
 Thanks to the Interstate 76 community for testing, ideas, and supporting this project.
+
+---
+
+
+# Android port
+
+I26FORDroid is an unofficial Android port of I26, maintained by [tiagop91](https://github.com/tiagop91), based on the original project by [vahokif](https://github.com/vahokif/I26).
+
+[![Interstate 76' running natively on Android (I26FORDroid) : Retroid Pocket 5(video)](https://img.youtube.com/vi/566ZaqHka0E/maxresdefault.jpg)](hhttps://youtu.be/566ZaqHka0E)
+
+## Development acknowledgement
+
+The Android port was developed with the assistance of **ChatGPT (OpenAI)**, which carried out the code changes, Android adaptations, build configuration and technical implementation.
+
+The project was guided, tested and validated by myself, who provided feedback, refined the proposed changes and verified the results on real hardware.
+
+In short, the implementation was AI-assisted, with human direction, testing and final validation.
+
+**Please expect bugs and unfinished aspects. I'll do my best to maintain the port and improve it over time. Feedback, bug reports and suggestions are always welcome!**
+
+### Important limitations
+
+- Touchscreen controls are currently **not supported**.
+- A physical gamepad or built-in handheld controls are required.
+- Smartphone and tablet compatibility is not currently a target of this release, however it was tested on a Xiaomi 14T without gamepad and it launched the game.
+
+This is an experimental release.
+
+## Android installation
+
+1. Download the I26FORDroid APK from the [GitHub Releases](https://github.com/tiagop91/I26FORDroid/releases) page.
+2. Install the APK on your Android handheld.
+3. Obtain your own legitimate GOG offline installer for Interstate '76.
+4. Launch I26 and select the GOG installer using the Android file picker.
+5. Wait for the game data extraction to complete.
+
+The original game data is not included in this release. A legitimate GOG installer is required.
+
+## Testing
+
+**Tested device:**
+- Retroid Pocket 5.
+
+**Features tested:**
+- Application installation and startup.
+- GOG installer selection and extraction.
+- Save games.
+- Mission checkpoints.
+- First campaign mission.
+
+Compatibility with other Android handheld devices has not yet been verified.
+
+## Android port credits
+
+Android port and adaptations: [tiagop91](https://github.com/tiagop91).
+
+Original I26 project: [vahokif/I26](https://github.com/vahokif/I26).
+
+This is an unofficial community port. It is not affiliated with or endorsed by the original developers or rights holders.
