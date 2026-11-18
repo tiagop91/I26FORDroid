@@ -48,7 +48,7 @@ Thanks to the Interstate 76 community for testing, ideas, and supporting this pr
 
 I26FORDroid is an unofficial Android port of I26, maintained by [tiagop91](https://github.com/tiagop91), based on the original project by [vahokif](https://github.com/vahokif/I26).
 
-[![Interstate 76' running natively on Android (I26FORDroid) : Retroid Pocket 5(video)](https://img.youtube.com/vi/566ZaqHka0E/maxresdefault.jpg)](hhttps://youtu.be/566ZaqHka0E)
+[![Watch the I26 Android port gameplay](https://i.ytimg.com/vi/566ZaqHka0E/maxresdefault.jpg)](https://youtu.be/566ZaqHka0E)
 
 ## Development acknowledgement
 
