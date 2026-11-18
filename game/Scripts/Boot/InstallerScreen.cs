@@ -118,10 +118,55 @@ public partial class InstallerScreen : CanvasLayer
         dlg.PopupCentered(new Vector2I(960, 600));
     }
 
+    private static string PrepareInstallerPath(string path)
+    {
+        // Android's native file picker returns SAF content:// URIs.
+        // Copy the selected installer into normal app-private storage,
+        // because the GOG parser uses .NET FileStream and File.Exists.
+        if (!path.StartsWith("content://", StringComparison.OrdinalIgnoreCase))
+            return path;
+
+        using var source = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
+        if (source is null)
+            throw new IOException($"Godot couldn't open the selected Android file (error: {Godot.FileAccess.GetOpenError()}).");
+
+        long length = checked((long)source.GetLength());
+        if (length <= 0)
+            throw new IOException("The selected installer is empty or its size could not be read.");
+
+        string encodedName = path[(path.LastIndexOf('/') + 1)..];
+        string name = Path.GetFileName(System.Uri.UnescapeDataString(encodedName));
+        if (string.IsNullOrWhiteSpace(name) || !name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            name = "gog-installer.exe";
+
+        string directory = ProjectSettings.GlobalizePath("user://gog-installers");
+        Directory.CreateDirectory(directory);
+        string destination = Path.Combine(directory, name);
+
+        using var output = new FileStream(destination, FileMode.Create, System.IO.FileAccess.Write, FileShare.None, 1 << 20);
+
+        long copied = 0;
+        while (copied < length)
+        {
+            long remaining = length - copied;
+            byte[] buffer = source.GetBuffer(Math.Min(1L << 20, remaining));
+
+            if (buffer.Length == 0)
+                throw new EndOfStreamException($"Installer copy ended prematurely ({copied} of {length} bytes).");
+
+            output.Write(buffer, 0, buffer.Length);
+            copied += buffer.Length;
+        }
+
+        GD.Print($"installer: copied Android URI to {destination} ({copied} bytes)");
+        return destination;
+    }
+
     private void Pick(string exe, bool start)
     {
         try
         {
+            exe = PrepareInstallerPath(exe);
             _installer = GogInstaller.Open(exe);
         }
         catch (Exception ex) when (ex is InstallerException or IOException or UnauthorizedAccessException)
@@ -149,7 +194,10 @@ public partial class InstallerScreen : CanvasLayer
         _bar.Visible = false;
         _text.Text = $"{g.Title}\n{Path.GetFileName(g.Setup.Path)} (Inno Setup {g.Setup.Version})\n\n" +
             $"{g.Wanted.Count()} files, {GogInstaller.Mb(g.WantedBytes)} of game data, into:\n{_target}";
-        Buttons(("Extract", Extract), ("Choose folder…", ChooseFolder), ("Back", Offer));
+        if (OS.GetName() == "Android")
+            Buttons(("Extract", Extract), ("Back", Offer));
+        else
+            Buttons(("Extract", Extract), ("Choose folder…", ChooseFolder), ("Back", Offer));
     }
 
     private void Extract()

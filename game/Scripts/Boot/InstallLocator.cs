@@ -225,6 +225,10 @@ public sealed class LaunchOptions
 
     public static string LocalRoot()
     {
+        // Android: keep extracted game data alongside the port's persistent user:// saves and settings.
+        if (OS.GetName() == "Android")
+            return ProjectSettings.GlobalizePath("user://");
+
         var local = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
         return System.IO.Path.Combine(local, "I26");
     }
@@ -239,7 +243,9 @@ public sealed class LaunchOptions
     public static List<string> InstallPlaces => [.. ExtractedPlaces, .. GogPlaces];
 
     public static string DefaultExtractFolder(I76.Formats.Installers.GogGame game, long bytes = 0) =>
-        I76.Formats.Installers.ExtractionPlaces.Choose(game, OS.GetExecutablePath(), LocalRoot(), bytes);
+        OS.GetName() == "Android"
+            ? I76.Formats.Installers.ExtractionPlaces.Local(LocalRoot(), game)
+            : I76.Formats.Installers.ExtractionPlaces.Choose(game, OS.GetExecutablePath(), LocalRoot(), bytes);
 
     /// <summary>A game switch happened this run (<see cref="GameSwitch"/>): the command line's game choice (--install, --mission, ...) was for the first game and no longer applies; the chooser comes first.</summary>
     public static bool Switched;
